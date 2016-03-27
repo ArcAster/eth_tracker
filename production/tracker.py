@@ -30,8 +30,14 @@ class Ticker(object):
 
 	def updatePrice(self, latest_price_update):
 		self.name = self.name
-		self.previous_price = self.latest_price
+		self.previous_price = self.previous_price
 		self.latest_price = latest_price_update
+		self.time = int(time.time())
+
+	def thresholdUpdate(self):
+		self.name = self.name
+		self.previous_price = self.latest_price
+		self.latest_price = self.latest_price
 		self.time = int(time.time())
 
 	def getData(self):
@@ -70,13 +76,14 @@ while(True):
 	#print obj.latest_price
 
 	chng = percChange(obj.latest_price, obj.previous_price)
-	#print chng
+	print('price - %.3f | shift -  %.3f') %(obj.latest_price, chng)
 
-	if(abs(chng) >= 2.0):
+	if(abs(chng) >= 0.7):
+		alphaTick.thresholdUpdate()
 		msg = makeSMS(obj, chng)
 		print msg
 		sendSMS(msg)
 
-	time.sleep(60)
+	time.sleep(90)
 
 
