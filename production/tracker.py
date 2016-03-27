@@ -2,12 +2,18 @@
 # sends SMS updates when the price of Ethereum crypto changes ~%
 
 # import deps
-import time, twilio
+import time
+
+from twilio.rest import TwilioRestClient
 
 from fetcher import *
 
 # import super secret credentials
 from config import *
+
+
+# init twilio api client
+twilio_client = TwilioRestClient(twilio_account_cred, twilio_token_cred)
 
 # all ticker related things happen here
 # price field is value of 1 ether in USD
@@ -36,17 +42,41 @@ alphaTick = Ticker('alpha', 10.01, 1.88, int(time.time()))
 
 # calculate percent change of input values
 def percChange(ltst, prev):
-	perc = ((prev - ltst) / ltst) * 100
+	perc = ((ltst-prev) / ltst) * 100
 	return perc
+
+def sendSMS(msg):
+	message = twilio_client.messages.create(to=user_num, from_=twilio_origin_cred, body=msg)
+
+# if %change threshold met, decide what message to send
+def makeSMS(obj, chng):
+	# positive change
+	if(chng > 0):
+		msg = '>> ETH UP | $' + format(obj.latest_price, '.2f') + ' | @ $' + format((obj.latest_price * 237), '.2f') + ' <<'
+		return msg
+
+	# negative change
+	else:
+		msg = 'ETH DOWN | $' + format(obj.latest_price, '.2f') + ' | @ $' + format((obj.latest_price * 237), '.2f') + ' <<'
+		return msg
+
+
 
 # update loop
 while(True):
 	alphaTick.updatePrice(getETHUSD())
-	latest = alphaTick.getData()
-	print latest.latest_price
+	obj = alphaTick.getData()
+	#print '-----------'
+	#print obj.latest_price
 
-	chng = percChange(latest.latest_price, latest.previous_price)
-	print chng
-	time.sleep(5)
+	chng = percChange(obj.latest_price, obj.previous_price)
+	#print chng
+
+	if(abs(chng) >= 2.0):
+		msg = makeSMS(obj, chng)
+		print msg
+		sendSMS(msg)
+
+	time.sleep(60)
 
 
