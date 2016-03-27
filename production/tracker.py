@@ -1,60 +1,52 @@
-# testing classes in python
+# Created by Alex Crisara on March 26, 2016
+# sends SMS updates when the price of Ethereum crypto changes ~%
 
 # import deps
+import time, twilio
 
-import time, json, requests
+from fetcher import *
 
+# import super secret credentials
+from config import *
+
+# all ticker related things happen here
+# price field is value of 1 ether in USD
 class Ticker(object):
-	# in python the __init__ class acts as the constructor
-	# need to use abstracted constructor -> one for ONLY latest
-	# -> one for latest_price and previous_price
-	# will different update methods be needed?
+	# previous_price is hard-coded in __init__
 	def __init__(self, name, latest_price, previous_price, time):
 		self.name = name
 		self.latest_price = latest_price
-		# default value set to 1.88
 		self.previous_price = 1.88
 		self.time = time
 
 	def get_latest_price(self):
 		return float(self.latest_price)
 
-	def updateTicker(self, latest_price_update):
+	def updatePrice(self, latest_price_update):
 		self.name = self.name
 		self.previous_price = self.latest_price
 		self.latest_price = latest_price_update
 		self.time = int(time.time())
- 
-	# just print out current data in ticker
-	def getTicker(self):
-		return 'name -> ', self.name, '\nlatest -> ', '%.3f' % self.latest_price, '\nprevious -> ', '%.3f' % self.previous_price, '\ntime -> ', self.time
 
-ticker1 = Ticker("alpha", 11.69, 11.21, int(time.time()))
+	def getData(self):
+		return self
 
-print('testing methods')
+# creating primary instance of ticker
+alphaTick = Ticker('alpha', 10.01, 1.88, int(time.time()))
 
-print('\nGetting Latest Price for Ticker1')
+# calculate percent change of input values
+def percChange(ltst, prev):
+	perc = ((prev - ltst) / ltst) * 100
+	return perc
 
-print(ticker1.get_latest_price())
+# update loop
+while(True):
+	alphaTick.updatePrice(getETHUSD())
+	latest = alphaTick.getData()
+	print latest.latest_price
 
-print('\nGetting latest data for Ticker1')
+	chng = percChange(latest.latest_price, latest.previous_price)
+	print chng
+	time.sleep(5)
 
-print(ticker1.getTicker())
-
-time.sleep(3)
-
-print('\nUpdating ticker1 w/ new info')
-
-# don't need to pass self back into method call on instance of class
-ticker1.updateTicker(14.22)
-
-print(ticker1.getTicker())
-
-time.sleep(3)
-
-print('\nUpdating ticker1 again w/ new info')
-
-ticker1.updateTicker(13.25)
-
-print(ticker1.getTicker())
 

@@ -26,15 +26,26 @@ def getRate(query, url):
 	# fetch api data and parse raw -> json
 	apiResp = requests.get(url)
 	parsedResp = json.loads(apiResp.text)
-	
+
 	# build tree for objectpath to traverse
 	respTree = Tree(parsedResp)
 
 	# apply given objectpath query
 	outVal = respTree.execute(query)
-	
+
 	# return query result
 	return outVal
+
+
+# convert value of 1 ETH to USD
+def getETHUSD():
+	ETHBTC = getRate(ETHBTC_query, gatecoin_url)
+	BTCUSD = getRate(BTCUSD_query, gatecoin_url)
+	# convert
+	valUSD = float(ETHBTC * BTCUSD)
+
+	return valUSD
+
 
 '''
 print('Testing functions')
