@@ -70,20 +70,25 @@ def makeSMS(obj, chng):
 
 # update loop
 while(True):
-	alphaTick.updatePrice(getETHUSD())
-	obj = alphaTick.getData()
-	#print '-----------'
-	#print obj.latest_price
+	
+	try:
+		alphaTick.updatePrice(getETHUSD())
+		obj = alphaTick.getData()
+		#print '-----------'
+		#print obj.latest_price
 
-	chng = percChange(obj.latest_price, obj.previous_price)
-	print('price - %.3f | shift -  %.3f') %(obj.latest_price, chng)
+		chng = percChange(obj.latest_price, obj.previous_price)
+		print('price - %.3f | shift -  %.3f') %(obj.latest_price, chng)
 
-	if(abs(chng) >= 1.5):
-		alphaTick.thresholdUpdate()
-		msg = makeSMS(obj, chng)
-		print msg
-		sendSMS(msg)
-
+		if(abs(chng) >= 1.5):
+			alphaTick.thresholdUpdate()
+			msg = makeSMS(obj, chng)
+			print msg
+			sendSMS(msg)
+	except:
+		print '\n--WEIRD PARSE ERROR --\n'
+		pass
+	
 	time.sleep(90)
 
 
