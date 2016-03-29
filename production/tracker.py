@@ -63,7 +63,7 @@ def makeSMS(obj, chng):
 
 	# negative change
 	else:
-		msg = 'ETH DOWN | $' + format(obj.latest_price, '.2f') + ' | @ $' + format((obj.latest_price * 237), '.2f') + ' <<'
+		msg = '>> ETH DOWN | $' + format(obj.latest_price, '.2f') + ' | @ $' + format((obj.latest_price * 237), '.2f') + ' <<'
 		return msg
 
 
