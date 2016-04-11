@@ -80,7 +80,7 @@ while(True):
 		chng = percChange(obj.latest_price, obj.previous_price)
 		print('price - %.3f | shift -  %.3f') %(obj.latest_price, chng)
 
-		if(abs(chng) >= 1.5):
+		if(abs(chng) >= 2.0):
 			alphaTick.thresholdUpdate()
 			msg = makeSMS(obj, chng)
 			print msg
