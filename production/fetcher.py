@@ -40,7 +40,7 @@ def getRate(query, url):
 	outVal = respTree.execute(query)
 
 	# return query result
-	return outVal
+	return float(outVal)
 
 
 # convert value of 1 ETH to USD
