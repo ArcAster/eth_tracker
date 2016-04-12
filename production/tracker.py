@@ -55,15 +55,15 @@ def sendSMS(msg):
 	message = twilio_client.messages.create(to=user_num, from_=twilio_origin_cred, body=msg)
 
 # if %change threshold met, decide what message to send
-def makeSMS(obj, chng):
+def makeSMS(obj, chng, accBal):
 	# positive change
 	if(chng > 0):
-		msg = '>> ETH UP | $' + format(obj.latest_price, '.2f') + ' | @ $' + format((obj.latest_price * getAcctBal()), '.2f') + ' <<'
+		msg = '>> ETH UP | $' + format(obj.latest_price, '.2f') + ' | @ $' + format((obj.latest_price * accBal), '.2f') + ' <<'
 		return msg
 
 	# negative change
 	else:
-		msg = '>> ETH DOWN | $' + format(obj.latest_price, '.2f') + ' | @ $' + format((obj.latest_price * getAcctBal()), '.2f') + ' <<'
+		msg = '>> ETH DOWN | $' + format(obj.latest_price, '.2f') + ' | @ $' + format((obj.latest_price * accBal), '.2f') + ' <<'
 		return msg
 
 
@@ -72,8 +72,11 @@ def makeSMS(obj, chng):
 while(True):
 	
 	try:
+		
 		alphaTick.updatePrice(getETHUSD())
+		print "fetch ETHUSD - GOOD"
 		obj = alphaTick.getData()
+		print "obj getData() - GOOD"
 		#print '-----------'
 		#print obj.latest_price
 
@@ -81,8 +84,10 @@ while(True):
 		print('price - %.3f | shift -  %.3f') %(obj.latest_price, chng)
 
 		if(abs(chng) >= 2.0):
+			print "entered if case"
 			alphaTick.thresholdUpdate()
-			msg = makeSMS(obj, chng)
+			print "alphaTick good"
+			msg = makeSMS(obj, chng, getAcctBal())
 			print msg
 			sendSMS(msg)
 	except:

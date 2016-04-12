@@ -6,12 +6,20 @@
 # might eventually have the ability to query balance of ETH address
 
 # import deps
+
+# import fancy pyOpenSSL and inject to urllib3
+import urllib3
+import urllib3.contrib.pyopenssl 
+urllib3.contrib.pyopenssl.inject_into_urllib3() 
+
 import requests, json
 
 from objectpath import *
 
 # import super secret credentials
 from config import *
+
+
 
 # TEST VAL
 user_eth_addr = "0x5c6680bEF7556AAe95B5fD073DDb35a0EA59C601"
@@ -29,7 +37,7 @@ ETHBTC_query = "$..tickers.*[@.currencyPair is 'ETHBTC'].last[0]"
 BTCUSD_query = "$..tickers.*[@.currencyPair is 'BTCUSD'].last[0]"
 
 # query for current acct balance
-ACCT_BAL_query = "$..data[0].balance"
+BAL_query = "$..data[0].balance"
 
 def getRate(query, url):
 	# fetch api data and parse raw -> json
@@ -56,7 +64,7 @@ def getETHUSD():
 	return valUSD
 
 def getAcctBal():
-	cur_bal = getRate(ACCT_BAL_query, etherchain_url)
+	cur_bal = getRate(BAL_query, etherchain_url)
 
 	# convert from Wei to Ether (10^18 Wei in 1 Ether)
 	balance = float(cur_bal) / pow(10, 18)
@@ -64,7 +72,6 @@ def getAcctBal():
 	return balance
 
 
-'''
 print('Testing functions')
 
 testETHBTC = getRate(ETHBTC_query, gatecoin_url)
@@ -72,4 +79,11 @@ print('\nETH to BTC rate -> %.6f') %testETHBTC
 
 testBTCUSD = getRate(BTCUSD_query, gatecoin_url)
 print('\nBTC to USD rate -> %.6f') %testBTCUSD
-'''
+
+print('\n Testing eth balance')
+
+print('type for ethUSD')
+print(getETHUSD())
+
+print('\n output for getAcctBal')
+print(getAcctBal())
