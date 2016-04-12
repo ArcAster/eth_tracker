@@ -10,10 +10,13 @@ import requests, json
 
 from objectpath import *
 
+# import super secret credentials
+from config import *
+
 # API url
 # no auth is needed
 gatecoin_url = "https://www.gatecoin.com/api/Public/LiveTickers"
-
+etherchain_url = "https://etherchain.org/api/account/" + user_eth_addr
 
 # objectpath queries
 # query for ETHBTC
@@ -21,6 +24,9 @@ ETHBTC_query = "$..tickers.*[@.currencyPair is 'ETHBTC'].last[0]"
 
 # query for BTCUSD
 BTCUSD_query = "$..tickers.*[@.currencyPair is 'BTCUSD'].last[0]"
+
+# query for current acct balance
+ACCT_BAL_query = "$..data[0].balance"
 
 def getRate(query, url):
 	# fetch api data and parse raw -> json
@@ -45,6 +51,14 @@ def getETHUSD():
 	valUSD = float(ETHBTC * BTCUSD)
 
 	return valUSD
+
+def getAcctBal():
+	cur_bal = getRate(ACCT_BAL_query, etherchain_url)
+
+	# convert from Wei to Ether (10^18 Wei in 1 Ether)
+	balance = float(cur_bal) / pow(10, 18)
+
+	return balance
 
 
 '''

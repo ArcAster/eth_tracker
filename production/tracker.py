@@ -58,12 +58,12 @@ def sendSMS(msg):
 def makeSMS(obj, chng):
 	# positive change
 	if(chng > 0):
-		msg = '>> ETH UP | $' + format(obj.latest_price, '.2f') + ' | @ $' + format((obj.latest_price * 237), '.2f') + ' <<'
+		msg = '>> ETH UP | $' + format(obj.latest_price, '.2f') + ' | @ $' + format((obj.latest_price * getAcctBal()), '.2f') + ' <<'
 		return msg
 
 	# negative change
 	else:
-		msg = '>> ETH DOWN | $' + format(obj.latest_price, '.2f') + ' | @ $' + format((obj.latest_price * 237), '.2f') + ' <<'
+		msg = '>> ETH DOWN | $' + format(obj.latest_price, '.2f') + ' | @ $' + format((obj.latest_price * getAcctBal()), '.2f') + ' <<'
 		return msg
 
 
