@@ -13,6 +13,9 @@ from objectpath import *
 # import super secret credentials
 from config import *
 
+# TEST VAL
+user_eth_addr = "0x5c6680bEF7556AAe95B5fD073DDb35a0EA59C601"
+
 # API url
 # no auth is needed
 gatecoin_url = "https://www.gatecoin.com/api/Public/LiveTickers"
@@ -40,7 +43,7 @@ def getRate(query, url):
 	outVal = respTree.execute(query)
 
 	# return query result
-	return float(outVal)
+	return outVal
 
 
 # convert value of 1 ETH to USD

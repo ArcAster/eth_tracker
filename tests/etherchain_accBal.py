@@ -39,3 +39,11 @@ test = float(test) / pow(10, 18)
 print test
 
 print type(test)
+
+def getAcct():
+	test = getRate(ACCT_BAL_query, etherchain_url)
+	return float(test)
+
+print getAcct()
+print type(getAcct())
+

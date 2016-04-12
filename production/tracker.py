@@ -11,6 +11,8 @@ from fetcher import *
 # import super secret credentials
 from config import *
 
+print eth_user_addr
+
 
 # init twilio api client
 twilio_client = TwilioRestClient(twilio_account_cred, twilio_token_cred)
